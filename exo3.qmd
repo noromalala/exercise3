@@ -5,23 +5,270 @@ format: html
 editor: visual
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
-1 + 1
+# Load the data from the URL
+d <- read.csv("https://raw.githubusercontent.com/difiore/ada-2024-datasets/main/data-wrangling.csv")
+
+# Check the structure of the data
+str(d)
+
+# View the first few rows of the data
+head(d)
+
+names(d)
+
+
 ```
 
-You can add options to executable code like this
+**Body size dimorphism**
 
 ```{r}
-#| echo: false
-2 * 2
+install.packages("dplyr")
+library(dplyr)
+d <- d |> mutate(BSD = Body_mass_male_mean/Body_mass_female_mean)
+d
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+**Sex_ratio**
+
+```{r}
+d <- d |> mutate(sex_ratio = AdultMales/AdultFemale) 
+d
+
+```
+
+**Defensibility index**
+
+```{r}
+
+#diameter of a circle
+#diameter = 2 x √(area/π)
+
+d <- d |> mutate(Diameter = 2 * sqrt(HomeRange_km2 / pi))
+                 
+d <- d |> mutate(DI = DayLength_km/ Diameter) 
+d 
+```
+
+4.  **Plot relationship between day range length and time spent**
+
+    **4.1. Species overall**
+
+```{r}
+
+#Question 4# 
+install.packages("ggplot2") 
+library(ggplot2)  
+#normality test# 
+install.packages("nortest") 
+library(nortest) 
+v <- d$DayLength_km 
+ad.test(v) z <- d$Move
+ad.test(z)  
+
+
+# > not normal  
+
+#Species Overall# 
+
+
+ggplot(d, aes(x = log(DayLength_km), y = log(Move) )) +   geom_point(na.rm = TRUE) +   labs(x = "Day Range Length (km)", y = "Time Spent Moving (hours)", title = "Fig.1 Overall Species Day Range Length and Time Spent Moving")  
+
+#Species that travel more time also move farther
+
+
+```
+
+**4.2. Family**
+
+```{r}
+#Question 4#
+install.packages("ggplot2")
+library(ggplot2)
+
+
+
+#normality test#
+install.packages("nortest")
+library(nortest)
+v <- d$DayLength_km
+ad.test(v)
+z <- d$Move
+ad.test(z)
+
+# > not normal 
+
+
+#Family#
+
+  ggplot(d, aes(x = log(DayLength_km), y = log(Move), color = Family)) +
+  geom_point(na.rm = TRUE) +
+  labs(x = "Day Range Length (km)", y = "Time Spent Moving (hours)",
+       title = "Fig.3. Day Range Length and Time Spent Moving By Family") +
+  scale_color_discrete(name = "Family")
+
+
+  #Family that travel more time also travel far
+  #I transform data after running normality test for both variable
+```
+
+5.  **Plot relationship between day range length and time group size**
+
+    **5.1. Species overall**
+
+```{r}
+
+
+install.packages("ggplot2")
+library(ggplot2)
+
+
+#normality# 
+v <- d$DayLength_km 
+ad.test(v) 
+z <- d$MeanGroupSize
+ad.test(z) 
+
+
+#Species Overall#   
+ggplot(d, aes(x = log(DayLength_km), y = log(MeanGroupSize) )) +   geom_point(na.rm = TRUE) +   labs(x = "Day Range Length (km)", y = "Mean Group Size",        title = "Fig.1 Overall Species Day Range Length and Mean Group Size") 
+
+#Species that live in larger group travel farther as well
+
+```
+
+**5.2 Family**
+
+```{r}
+
+
+install.packages("ggplot2")
+library(ggplot2)
+
+
+#normality#
+
+v <- d$DayLength_km
+ad.test(v)
+z <- d$MeanGroupSize
+ad.test(z)
+
+
+#Family#
+
+  ggplot(d, aes(x = log(DayLength_km), y = log(MeanGroupSize), color = Family)) +
+  geom_point(na.rm = TRUE) +
+  labs(x = "Day Range Length (km)", y = "Time Spent Moving (hours)",
+       title = "Fig.3. Day Range Length and Mean Group Size By Family") +
+  scale_color_discrete(name = "Family")
+  
+  #Family that live in large group travel farther
+
+```
+
+6.  **Plot body size dimorphism and canine size dimorphism**
+
+    **6.1 Specie overall**
+
+```{r}
+
+install.packages("ggplot2")
+library(ggplot2)
+
+
+#test de normalite#
+
+install.packages("nortest")
+library(nortest)
+
+v <- d$BSD
+ad.test(v)
+z <- d$Canine_Dimorphism
+ad.test(z)
+
+
+#Species Overall#
+
+
+ggplot(d, aes(x = log(BSD), y = log(Canine_Dimorphism) )) +
+  geom_point(na.rm = TRUE) +
+  labs(x = "Body size Dimorphism", y = "Canine Size Dimorphism",
+       title = "Fig.1 Overall Species Body size Dimorphism and Canine Size Dimorphism")
+
+#Taxa that have greater dimorphism also have greater canine
+```
+
+7.   **6.2 Family**
+
+    ```{r}
+
+
+    install.packages("ggplot2")
+    library(ggplot2)
+
+
+    #test de normalite#
+
+    install.packages("nortest")
+    library(nortest)
+
+    v <- d$BSD
+    ad.test(v)
+    z <- d$Canine_Dimorphism
+    ad.test(z)
+
+    #Family#
+
+      ggplot(d, aes(x = log(BSD), y = log(Canine_Dimorphism), color = Family)) +
+      geom_point(na.rm = TRUE) +
+      labs(x = "Body size Dimorphism", y = "Canine Size Dimorphism",
+           title = "Fig.3. Body size Dimorphism and Canine Size Dimorphism By Family") +
+      scale_color_discrete(name = "Family")
+
+      
+    ```
+
+    7.  **Diet**
+
+    ```{r}
+
+    install.packages("ggplot2")
+    library(ggplot2)   
+
+    #Define the diet first
+    install.packages("dplyr")
+    library(dplyr)
+
+    #The results of the two codes are not the same
+
+    # diet
+
+    d <- d |> mutate(d, diet = ifelse(Fruit >= 50, "frugivore", ifelse(Leaves >= 50, "folivore",
+        "omnivore")))
+
+
+    # Boxplot
+    boxplot(MeanGroupSize ~ diet, data = d, na.rm = TRUE,
+            xlab = "Dietary Strategy", ylab = "Group Size",
+            main = "Group Size by Dietary Strategy")
+
+    #Frugivore live in larger group than folivore
+
+    ```
+
+8.  **Concatenation, sort by family and**
+
+```{r}
+
+install.packages("dplyr")
+library(dplyr)
+
+d <- d |>
+  mutate(Binomial = paste(Genus, Species, sep = " ")) |>
+  select(Binomial, Family, Brain_Size_Species_Mean, Body_mass_male_mean) |>
+  group_by(Family) |>
+  summarise(avg_Brain_size = mean(Brain_Size_Species_Mean, na.rm = TRUE),
+            avg_Body_mass = mean(Body_mass_male_mean, na.rm = TRUE)) |>
+  arrange(avg_Brain_size)
+d
+```
