@@ -198,63 +198,63 @@ ggplot(d, aes(x = log(BSD), y = log(Canine_Dimorphism) )) +
 #Taxa that have greater dimorphism also have greater canine
 ```
 
-7.   **6.2 Family**
+7.  **6.2 Family**
 
-    ```{r}
-
-
-    install.packages("ggplot2")
-    library(ggplot2)
+```{{r}}
 
 
-    #test de normalite#
-
-    install.packages("nortest")
-    library(nortest)
-
-    v <- d$BSD
-    ad.test(v)
-    z <- d$Canine_Dimorphism
-    ad.test(z)
-
-    #Family#
-
-      ggplot(d, aes(x = log(BSD), y = log(Canine_Dimorphism), color = Family)) +
-      geom_point(na.rm = TRUE) +
-      labs(x = "Body size Dimorphism", y = "Canine Size Dimorphism",
-           title = "Fig.3. Body size Dimorphism and Canine Size Dimorphism By Family") +
-      scale_color_discrete(name = "Family")
-
-      
-    ```
-
-    7.  **Diet**
-
-    ```{r}
-
-    install.packages("ggplot2")
-    library(ggplot2)   
-
-    #Define the diet first
-    install.packages("dplyr")
-    library(dplyr)
-
-    #The results of the two codes are not the same
-
-    # diet
-
-    d <- d |> mutate(d, diet = ifelse(Fruit >= 50, "frugivore", ifelse(Leaves >= 50, "folivore",
-        "omnivore")))
+install.packages("ggplot2")
+library(ggplot2)
 
 
-    # Boxplot
-    boxplot(MeanGroupSize ~ diet, data = d, na.rm = TRUE,
-            xlab = "Dietary Strategy", ylab = "Group Size",
-            main = "Group Size by Dietary Strategy")
+#test de normalite#
 
-    #Frugivore live in larger group than folivore
+install.packages("nortest")
+library(nortest)
 
-    ```
+v <- d$BSD
+ad.test(v)
+z <- d$Canine_Dimorphism
+ad.test(z)
+
+#Family#
+
+  ggplot(d, aes(x = log(BSD), y = log(Canine_Dimorphism), color = Family)) +
+  geom_point(na.rm = TRUE) +
+  labs(x = "Body size Dimorphism", y = "Canine Size Dimorphism",
+       title = "Fig.3. Body size Dimorphism and Canine Size Dimorphism By Family") +
+  scale_color_discrete(name = "Family")
+
+  
+```
+
+7.  **Diet**
+
+```{r}
+
+install.packages("ggplot2")
+library(ggplot2)   
+
+#Define the diet first
+install.packages("dplyr")
+library(dplyr)
+
+#The results of the two codes are not the same
+
+# diet
+
+d <- d |> mutate(d, diet = ifelse(Fruit >= 50, "frugivore", ifelse(Leaves >= 50, "folivore",
+    "omnivore")))
+
+
+# Boxplot
+boxplot(MeanGroupSize ~ diet, data = d, na.rm = TRUE,
+        xlab = "Dietary Strategy", ylab = "Group Size",
+        main = "Group Size by Dietary Strategy")
+
+#Frugivore live in larger group than folivore
+
+```
 
 8.  **Concatenation, sort by family and**
 
